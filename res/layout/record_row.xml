@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" 
+    android:layout_marginTop="1dp"
+    android:background="#000">
+	<TextView android:id="@+id/tv_rrTime" android:gravity="center_horizontal" android:layout_marginRight="1dp"/>    
+	<TextView android:id="@+id/tv_rrX" android:gravity="center_horizontal" android:layout_marginRight="1dp"/>    
+	<TextView android:id="@+id/tv_rrY" android:gravity="center_horizontal" android:layout_marginRight="1dp"/>    
+	<TextView android:id="@+id/tv_rrZ" android:gravity="center_horizontal" android:layout_marginRight="1dp"/>    	
+	<TextView android:id="@+id/tv_rrVacc" android:gravity="center_horizontal"/>    	
+</TableRow>
