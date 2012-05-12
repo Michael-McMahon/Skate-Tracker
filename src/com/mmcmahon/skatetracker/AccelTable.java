@@ -33,6 +33,7 @@ public class AccelTable extends Activity implements SensorEventListener
    private Vector<RowData> data;
    private SimpleDateFormat formatter = new SimpleDateFormat("hh:mm:ss:SS");
    private boolean showAccel = true;
+   private boolean noisey = false;//Flag is true during acceleration
 
    
    private SensorManager sensorMan;//Allows this activity to listen to accelerometer
@@ -110,17 +111,26 @@ public class AccelTable extends Activity implements SensorEventListener
             //Determine if acceleration is negligible
             if(analyzer.euclideanDeltaAcc() > NOISE)
             {
+               noisey = true;//Device is undergoing significant acceleration
+               
                //Update vertical acceleration display
                updateVerticalAcc(vAcc);
                addData(timeMs, delta, vAcc, true);//Add acceleration entry to table
                addData(timeMs, orientation, vAcc, false);//Add an entry for the current orientation
             }
+            else//Device is undergoing low acceleration
+            {
+               noisey = false;
+            }
             return;
          
          case Sensor.TYPE_MAGNETIC_FIELD:
-            orientation = analyzer.readMagEvent(event);
-            //Update orientation display
-            updateOrientation();
+            if(!noisey)//Ignore inaccurate readings during acceleration.
+            {
+               orientation = analyzer.readMagEvent(event);
+               //Update orientation display
+               updateOrientation();
+            }
             return;
          
          default:
