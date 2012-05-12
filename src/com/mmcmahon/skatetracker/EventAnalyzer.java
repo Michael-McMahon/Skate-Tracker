@@ -48,9 +48,9 @@ public class EventAnalyzer
       SensorManager.getOrientation(rotation, orientation);
       
       //Convert radians to degrees
-      /*orientation[0] = (float) Math.toDegrees(orientation[0]);
+      orientation[0] = (float) Math.toDegrees(orientation[0]);
       orientation[1] = (float) Math.toDegrees(orientation[1]);
-      orientation[2] = (float) Math.toDegrees(orientation[2]);*/
+      orientation[2] = (float) Math.toDegrees(orientation[2]);
 
       return orientation;
    }
