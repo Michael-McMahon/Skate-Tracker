@@ -15,7 +15,8 @@ public final class R {
     }
     public static final class id {
         public static final int btn_orientationFlip=0x7f050000;
-        public static final int btn_recordFlip=0x7f050006;
+        public static final int btn_recordFlip=0x7f050005;
+        public static final int digitalClock1=0x7f050006;
         public static final int ll_recordRoot=0x7f050004;
         public static final int sv_recordRoot=0x7f05000b;
         public static final int tl_recordTable=0x7f05000c;
@@ -25,7 +26,6 @@ public final class R {
         public static final int tv_orientationZ=0x7f050003;
         public static final int tv_recordPitch=0x7f050008;
         public static final int tv_recordRoll=0x7f050009;
-        public static final int tv_recordVertAcc=0x7f050005;
         public static final int tv_recordYaw=0x7f050007;
         public static final int tv_rrTime=0x7f05000d;
         public static final int tv_rrVacc=0x7f050011;

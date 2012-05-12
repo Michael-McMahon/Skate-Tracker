@@ -26,7 +26,7 @@ public class AccelTable extends Activity implements SensorEventListener
    private final float NOISE = (float)2;//Adjusts sensitivity to motion
    private final int MAX_ROWS = 50;//Maximum rows allowed in table
    
-   private TextView tvYaw, tvPitch, tvRoll, tvVertAcc;
+   private TextView tvYaw, tvPitch, tvRoll;
    private ScrollView scroller;
    private TableLayout table;
    private int rowCount;
@@ -53,7 +53,6 @@ public class AccelTable extends Activity implements SensorEventListener
       tvYaw = (TextView)findViewById(R.id.tv_recordYaw);
       tvPitch = (TextView)findViewById(R.id.tv_recordPitch);
       tvRoll = (TextView)findViewById(R.id.tv_recordRoll);
-      tvVertAcc = (TextView)findViewById(R.id.tv_recordVertAcc);
       
       scroller = (ScrollView)findViewById(R.id.sv_recordRoot);
       table = (TableLayout)findViewById(R.id.tl_recordTable);
@@ -113,8 +112,6 @@ public class AccelTable extends Activity implements SensorEventListener
             {
                noisey = true;//Device is undergoing significant acceleration
                
-               //Update vertical acceleration display
-               updateVerticalAcc(vAcc);
                addData(timeMs, delta, vAcc, true);//Add acceleration entry to table
                addData(timeMs, orientation, vAcc, false);//Add an entry for the current orientation
             }
@@ -143,15 +140,6 @@ public class AccelTable extends Activity implements SensorEventListener
       tvYaw.setText(Float.toString(orientation[0]));
       tvPitch.setText(Float.toString(orientation[1]));
       tvRoll.setText(Float.toString(orientation[2]));
-   }
-   
-   /**
-    * Updates the vertical acceleration display.
-    * @param vAcc The value to display.
-    */
-   private void updateVerticalAcc(float vAcc)
-   {
-      tvVertAcc.setText(Float.toString(vAcc));
    }
    
    public void addData(long time, float delta[], float vAcc, boolean isAccel)
