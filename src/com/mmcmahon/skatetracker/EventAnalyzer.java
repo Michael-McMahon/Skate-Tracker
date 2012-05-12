@@ -34,6 +34,8 @@ public class EventAnalyzer
    public float[] readMagEvent(SensorEvent event)
    {
       float rotation[] = new float[9];//The rotation matrix, R
+      float orienDegrees[] = new float[3];//Stores the result, in degrees
+      
       System.arraycopy(event.values, 0, magVals, 0, 3);
 
       if(!SensorManager.getRotationMatrix(rotation, null, accVals, magVals))
@@ -48,11 +50,11 @@ public class EventAnalyzer
       SensorManager.getOrientation(rotation, orientation);
       
       //Convert radians to degrees
-      orientation[0] = (float) Math.toDegrees(orientation[0]);
-      orientation[1] = (float) Math.toDegrees(orientation[1]);
-      orientation[2] = (float) Math.toDegrees(orientation[2]);
+      orienDegrees[0] = (float) Math.toDegrees(orientation[0]);
+      orienDegrees[1] = (float) Math.toDegrees(orientation[1]);
+      orienDegrees[2] = (float) Math.toDegrees(orientation[2]);
 
-      return orientation;
+      return orienDegrees;
    }
    
    /**
@@ -86,18 +88,31 @@ public class EventAnalyzer
       //Calculate the vertical component of the 3 acceleration vectors
       float x = (float) (accVals[0] * Math.sin(orientation[2]));//Xacc * sin(roll)
       float y = (float) (accVals[1] * Math.sin(orientation[1]));//Yacc * sin(pitch)
-      float z = (float) (accVals[2] * Math.cos(orientation[1]));//Zacc * cos(pitch)
+      float z = (float) (accVals[2] * Math.cos(orientation[1]) * 
+            Math.cos(orientation[2]));//Zacc * cos(pitch)
       
       return x + y + z;
    }
    
-   public float verticalDeltaAcc()
+   /**
+    * Compute the device's vertical acceleration, meaning the magnitude 
+    * of acceleration away from the ground.
+    * @param a The acceleration values from a TYPE_ACCELEROMETER SensorEvent
+    * @param o The orientation values returned from SensorManager.getOrientation, converted to degrees
+    * @return The vertical acceleration of the device.
+    */
+   public float verticalDeltaAcc(float a[], float o[])
    {
+      //Convert back to radians
+      o[0] = (float) Math.toRadians(o[0]);
+      o[1] = (float) Math.toRadians(o[1]);
+      o[2] = (float) Math.toRadians(o[2]);
+      
       //Calculate the vertical component of the 3 acceleration vectors
-      float x = (float) (delta[0] * Math.sin(orientation[2]));//Xacc * sin(roll)
-      float y = (float) (delta[1] * Math.sin(orientation[1]));//Yacc * sin(pitch)
-      float z = (float) (delta[2] * Math.cos(orientation[1]) * 
-            Math.cos(orientation[2]));//Zacc * -cos(pitch) * cos(roll)
+      float x = (float) (a[0] * Math.sin(o[2]));//Xacc * sin(roll)
+      float y = (float) (a[1] * Math.sin(o[1]));//Yacc * sin(pitch)
+      float z = (float) (a[2] * Math.cos(o[1]) * 
+            Math.cos(o[2]));//Zacc * -cos(pitch) * cos(roll)
       
       return x + y + z;
    }

@@ -105,13 +105,12 @@ public class AccelTable extends Activity implements SensorEventListener
       {
          case Sensor.TYPE_ACCELEROMETER:
             delta = analyzer.readAccEvent(event);
-            vAcc = analyzer.verticalDeltaAcc();
+            vAcc = analyzer.verticalDeltaAcc(delta, orientation);
             
             //Determine if acceleration is negligible
             if(analyzer.euclideanDeltaAcc() > NOISE)
             {
                noisey = true;//Device is undergoing significant acceleration
-               
                addData(timeMs, delta, vAcc, true);//Add acceleration entry to table
                addData(timeMs, orientation, vAcc, false);//Add an entry for the current orientation
             }
