@@ -23,7 +23,8 @@ import android.widget.TextView;
 
 public class AccelTable extends Activity implements SensorEventListener
 {
-   private final float NOISE = (float)2;//Adjusts sensitivity to motion
+   private final float NOISE = (float)20;//Threshold for recording orientation
+   private final float IGNORE = (float)2;//Ignore accelerations below this threshold
    private final int MAX_ROWS = 50;//Maximum rows allowed in table
    
    private TextView tvYaw, tvPitch, tvRoll;
@@ -42,7 +43,7 @@ public class AccelTable extends Activity implements SensorEventListener
    
    private float orientation[] = {0, 0, 0};
    
-   private String eTag = "#" + this.getClass().getName() + "#";
+   private String eTag = "#AccelTable#";
    
    public void onCreate(Bundle sis)
    {
@@ -99,24 +100,23 @@ public class AccelTable extends Activity implements SensorEventListener
    {
       long timeMs = System.currentTimeMillis();
       float delta[];
-      float vAcc;
+      float vAcc, eAcc;
       
       switch(event.sensor.getType())
       {
          case Sensor.TYPE_ACCELEROMETER:
             delta = analyzer.readAccEvent(event);
             vAcc = analyzer.verticalDeltaAcc(delta, orientation);
+            eAcc = analyzer.euclideanDeltaAcc();
+            
+            noisey = eAcc > NOISE;
             
             //Determine if acceleration is negligible
-            if(analyzer.euclideanDeltaAcc() > NOISE)
+            if(eAcc > IGNORE)
             {
-               noisey = true;//Device is undergoing significant acceleration
                addData(timeMs, delta, vAcc, true);//Add acceleration entry to table
                addData(timeMs, orientation, vAcc, false);//Add an entry for the current orientation
-            }
-            else//Device is undergoing low acceleration
-            {
-               noisey = false;
+               Log.e(eTag, orientation[0] + ", " + orientation[1] + ", " + orientation[2]);
             }
             return;
          
@@ -124,6 +124,7 @@ public class AccelTable extends Activity implements SensorEventListener
             if(!noisey)//Ignore inaccurate readings during acceleration.
             {
                orientation = analyzer.readMagEvent(event);
+               Log.e(eTag, orientation[0] + " * " + orientation[1] + " * " + orientation[2]);
                //Update orientation display
                updateOrientation();
             }
