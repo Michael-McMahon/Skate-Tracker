@@ -2,9 +2,11 @@ package com.mmcmahon.skatetracker;
 
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 public class EventAnalyzer 
 {
+   private static final String eTag = "#EventAnalyzer#";
    private float delta[] = {0, 0, 0};
    private float accVals[] = {0, 0, 0};
    private float magVals[] = {0, 0, 0};
@@ -43,7 +45,8 @@ public class EventAnalyzer
          //Calculation of rotation matrix failed!
          orientation[0] = 0;
          orientation[2] = 0;
-         orientation[1] = 0;         
+         orientation[1] = 0;
+         Log.e(eTag, "Call to getRotationMatrix failed");
          return orientation;
       }
       
@@ -103,16 +106,18 @@ public class EventAnalyzer
     */
    public float verticalDeltaAcc(float a[], float o[])
    {
+      float oRad[] = new float[3];
+      
       //Convert back to radians
-      o[0] = (float) Math.toRadians(o[0]);
-      o[1] = (float) Math.toRadians(o[1]);
-      o[2] = (float) Math.toRadians(o[2]);
+      oRad[0] = (float) Math.toRadians(o[0]);
+      oRad[1] = (float) Math.toRadians(o[1]);
+      oRad[2] = (float) Math.toRadians(o[2]);
       
       //Calculate the vertical component of the 3 acceleration vectors
-      float x = (float) (a[0] * Math.sin(o[2]));//Xacc * sin(roll)
-      float y = (float) (a[1] * Math.sin(o[1]));//Yacc * sin(pitch)
-      float z = (float) (a[2] * Math.cos(o[1]) * 
-            Math.cos(o[2]));//Zacc * -cos(pitch) * cos(roll)
+      float x = (float) (a[0] * Math.sin(oRad[2]));//Xacc * sin(roll)
+      float y = (float) (a[1] * Math.sin(oRad[1]));//Yacc * sin(pitch)
+      float z = (float) (a[2] * Math.cos(oRad[1]) * 
+            Math.cos(oRad[2]));//Zacc * -cos(pitch) * cos(roll)
       
       return x + y + z;
    }
